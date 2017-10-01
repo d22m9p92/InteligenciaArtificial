@@ -33,7 +33,7 @@ class Bomberobot(SearchProblem):
 			if lista[2] > 500:
 				mayor500 = True
 
-		
+
 		if mayor500 != True:	
 			#Movimientos adyacentes
 			if robot[1][0] > 0:#Arriba 
@@ -43,8 +43,8 @@ class Bomberobot(SearchProblem):
 			if robot[1][1] > 0:#izquierda       
 				acciones.append(("Moverse","L"))
 			if robot[1][1] < LONGITUD:
-			 	acciones.append(("Moverse","R"))
-		  
+				acciones.append(("Moverse","R"))
+
 			#Acciones mover objeto o extinguir
 			for maquina in listamaquinas :
 				if maquina[1] == robot[1] :
@@ -53,12 +53,12 @@ class Bomberobot(SearchProblem):
 						extinguir = True
 						if robot[1][0] > 0:#Arriba 
 							acciones.append(("Empujar-U",maquina[0]))    
-			  			if robot[1][0] < LONGITUD :#ABAJO
-			  				acciones.append(("Empujar-D",maquina[0]))
-			  			if robot[1][1] > 0:#izquierda
-			  				acciones.append(("Empujar-L",maquina[0]))
-			  			if robot[1][1] < LONGITUD:
-			  				acciones.append(("Empujar-R",maquina[0]))
+						if robot[1][0] < LONGITUD :#ABAJO
+							acciones.append(("Empujar-D",maquina[0]))
+						if robot[1][1] > 0:#izquierda
+							acciones.append(("Empujar-L",maquina[0]))
+						if robot[1][1] < LONGITUD:
+							acciones.append(("Empujar-R",maquina[0]))
 
 			if extinguir == True:
 				acciones.append(("Extinguir",'0'))
@@ -192,7 +192,7 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 
 if __name__ == '__main__':
 
-	print 'Inicio', datetime.datetime.now()
+	#print 'Inicio', datetime.datetime.now()
 
 	aparatos = ((1, 2), (2, 0), (3, 0))
 	resultado = resolver('greedy',aparatos)
@@ -203,7 +203,7 @@ if __name__ == '__main__':
 #	for accion, estado in resultado.path():
 #		print 'Movi', accion
 #		print 'Llegue a', estado
-	print 'costo', str(resultado.cost)
-	print 'profundidad', str(resultado.depth)	
-	print 'Fin', datetime.datetime.now()
+	#print 'costo', str(resultado.cost)
+	#print 'profundidad', str(resultado.depth)	
+	#print 'Fin', datetime.datetime.now()
 
