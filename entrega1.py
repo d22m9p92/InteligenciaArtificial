@@ -22,13 +22,16 @@ class Bomberobot(SearchProblem):
 
 		state2 = tupleToList(state)
 		#Posiciones de las maquinas
-		listamaquinas=[x for x in state2 if(x[0] !="R")]
-		robot = state2[3]
+		listamaquinas =[x for x in state2 if(x[0] !="R")]
+
+		for i in state2:
+			if i[0] == 'R':
+				robot = i#state2[3]
+
 		empujar = False
 		acciones = []
 		mayor500 = False
 		extinguir = False
-
 		for lista in listamaquinas:
 			if lista[2] > 500:
 				mayor500 = True
@@ -63,7 +66,6 @@ class Bomberobot(SearchProblem):
 			if extinguir == True:
 				acciones.append(("Extinguir",'0'))
 
-		#print 'Acciones', acciones
 		return acciones
 
 
@@ -72,13 +74,16 @@ class Bomberobot(SearchProblem):
 		#print 'Accion', action
 		#print 'State Inicial', state
 
-		robot = state[3]
 		accion, objeto = action
 		itemBaja = 0
 		#listamaquinas=[x for x in state if(x[0] !="R")]
 
 		#Lista de maquinas
 		listaElementos = tupleToList(state)
+
+		for i in listaElementos:
+			if i[0] == 'R':
+				robot = i#state2[3]
 
 		filaRobot = robot[1][0]
 		colRobot = robot[1][1]
@@ -87,11 +92,11 @@ class Bomberobot(SearchProblem):
 		if accion == "Moverse":
 			filaRobot = filaRobot + MOVIMIENTOS[objeto][0]   
 			colRobot = colRobot + MOVIMIENTOS[objeto][1]
-			#xRobot = movimiento(xRobot)
 
-			listaElementos[3][1] = (filaRobot,colRobot)
+			for item,lista in enumerate(listaElementos):
+				if lista[0] == 'R':
+					listaElementos[item][1] = (filaRobot,colRobot)
 
-		#else:
 			#Empujar y mover robot
 		elif 'Empujar' in action[0] :			
 			accion , lugar =  action[0].split("-")
@@ -99,8 +104,10 @@ class Bomberobot(SearchProblem):
 			#Mover el robot
 			filaRobot = filaRobot + MOVIMIENTOS[lugar][0]    
 			colRobot = colRobot + MOVIMIENTOS[lugar][1]	
-			listaElementos[3][1] = (filaRobot,colRobot)
 
+			for item,lista in enumerate(listaElementos):
+				if lista[0] == 'R':
+					listaElementos[item][1] = (filaRobot,colRobot)
 
 			#Mover la maquina
 			for item,lista in enumerate(listaElementos):
@@ -109,9 +116,6 @@ class Bomberobot(SearchProblem):
 
 		elif accion == "Extinguir":
 			#Bajar temperatura
-			
-			#print 'Extinguir', accion
-
 			for item,lista in enumerate(listaElementos):
 				if listaElementos[item][0] != 'R' and listaElementos[item][1] != salida and lista[1] == robot[1]:
 						listaElementos[item][2] = listaElementos[item][2] - 150
@@ -122,45 +126,27 @@ class Bomberobot(SearchProblem):
 			if listaElementos[item][0] != 'R' and listaElementos[item][1] != salida:
 				listaElementos[item][2] = listaElementos[item][2] + 25	
 
-				#if listaElementos[item][2] >= 500:
-				#	return None
-		
-		#print 'State final', listToTuple(listaElementos)
 		return listToTuple(listaElementos)
 
 
 	def is_goal (self,state):
 		listaElementos = tupleToList(state)
-		
-		#for i in listaElementos:
-		#	if i[1] ==  salida:
-		#		print i
-		if state[0][1] == salida and state[1][1] == salida and state[2][1] == salida and state[3][1] == salida :
-			#print 'Final', state
-			return True
-		else:
-			#print 'No meta',state
-			return False
-
+		return (len([x for x in listaElementos if x[1] != salida]) == 0)
 
 	def cost(self, state1, action, state2):
 			return 1
 
 
 	def heuristic(self,state):
-		distancia = 0
-		
-		#cambiar por algoritmo de manhatan
-		mx_1 = state[0][1][0]
-		my_1 = state[0][1][1]
-		mx_2 = state[1][1][0]
-		my_2 = state[1][1][1]
-		mx_3 = state[2][1][0]
-		my_3 = state[2][1][1]
-		sx = salida[0]
-		sy = salida[1]
+		def manhattan(pos1, pos2):
+			x1, y1 = pos1
+			x2, y2 = pos2
+			return (abs(x2 - x1) + abs(y2 - y1))
 
-		return abs(sx - mx_1) + abs(sy - my_1) + abs(sx - mx_2) + abs(sy - my_2) + abs(sx - mx_3) + abs(sy - my_3)
+		listaElementos = tupleToList(state)
+		listaPendientes = ([x[1] for x in listaElementos if x[1] != salida and x[0] != 'R'])
+		return sum([manhattan(x, salida) for x in listaPendientes])
+
 
 def resolver(metodo_busqueda,posiciones_aparatos):
 	
@@ -192,14 +178,15 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 
 if __name__ == '__main__':
 
-	#print 'Inicio', datetime.datetime.now()
+#	print 'Inicio', datetime.datetime.now()
 
 	aparatos = ((1, 2), (2, 0), (3, 0))
 	resultado = resolver('greedy',aparatos)
 
-#	print 'Estado meta:'
-#	print resultado.state
-#	print 'Camino:'
+#	print('Estado meta:')
+#	print(resultado)
+#	print(type(resultado))
+#	print('Camino:')
 #	for accion, estado in resultado.path():
 #		print 'Movi', accion
 #		print 'Llegue a', estado
