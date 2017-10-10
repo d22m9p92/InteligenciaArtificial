@@ -171,7 +171,7 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 	maquina = listToTuple(maquina)
 
 	problema = Bomberobot(maquina)
-	visor = BaseViewer()
+	#visor = BaseViewer()
 	
 	#Busquedas, Grafo -> graph_search=True
 	if (metodo_busqueda == 'breadth_first'): # En amplitud
@@ -179,10 +179,10 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 	elif (metodo_busqueda == 'depth_first'): # Profundidad
 		resultado = depth_first(problema, graph_search= True)#, viewer=visor)
 	elif (metodo_busqueda == 'greedy'): # Avara
-		resultado = greedy(problema, graph_search= True, viewer=visor)
+		resultado = greedy(problema, graph_search= True)#, viewer=visor)
 	elif (metodo_busqueda == 'astar'): # Estrella
-		resultado = astar(problema, graph_search=True, viewer=visor)
-	print(visor.stats)
+		resultado = astar(problema, graph_search=True)#, viewer=visor)
+	#print(visor.stats)
 
 
 
@@ -190,21 +190,21 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 
 if __name__ == '__main__':
 
-	print 'Inicio', datetime.datetime.now()
+	#print 'Inicio', datetime.datetime.now()
 
 	aparatos = ((1, 2), (2, 0), (3, 0))
-	resultado = resolver('astar',aparatos)
+	resultado = resolver('greedy',aparatos)
 
-	print('Estado meta:')
-	print(resultado)
-	print(type(resultado))
-	print('Camino:')
+	#print('Estado meta:')
+	#print(resultado)
+	#print(type(resultado))
+	#print('Camino:')
 #	for accion, estado in resultado.path():
 #		print 'Movi', accion
 #		print 'Llegue a', estado
-	print 'costo', str(resultado.cost)
-	print 'profundidad', str(resultado.depth)	
-	print 'Fin', datetime.datetime.now()
+	#print 'costo', str(resultado.cost)
+	#print 'profundidad', str(resultado.depth)	
+	#print 'Fin', datetime.datetime.now()
 
 
 
