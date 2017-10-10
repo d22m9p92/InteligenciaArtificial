@@ -140,12 +140,24 @@ class Bomberobot(SearchProblem):
 	def heuristic(self,state):
 		def manhattan(pos1, pos2):
 			x1, y1 = pos1
-			x2, y2 = pos2
+			x2, y2 = pos2 
 			return (abs(x2 - x1) + abs(y2 - y1))
 
 		listaElementos = tupleToList(state)
 		listaPendientes = ([x[1] for x in listaElementos if x[1] != salida and x[0] != 'R'])
-		return sum([manhattan(x, salida) for x in listaPendientes])
+		
+		h = sum([manhattan(x, salida) for x in listaPendientes])
+
+		#Manhhatan Robot
+		for i in listaElementos:
+			if i[0] == 'R':
+				robot = i[1]#state2[3]
+
+		x1, y1 = robot
+		x2, y2 = salida
+		r = (abs(x2 - x1) + abs(y2 - y1))
+		
+		return ( 2 * h -r) 
 
 
 def resolver(metodo_busqueda,posiciones_aparatos):
@@ -159,7 +171,7 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 	maquina = listToTuple(maquina)
 
 	problema = Bomberobot(maquina)
-	#visor = BaseViewer()
+	visor = BaseViewer()
 	
 	#Busquedas, Grafo -> graph_search=True
 	if (metodo_busqueda == 'breadth_first'): # En amplitud
@@ -167,10 +179,10 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 	elif (metodo_busqueda == 'depth_first'): # Profundidad
 		resultado = depth_first(problema, graph_search= True)#, viewer=visor)
 	elif (metodo_busqueda == 'greedy'): # Avara
-		resultado = greedy(problema, graph_search= True)#, viewer=visor)
+		resultado = greedy(problema, graph_search= True, viewer=visor)
 	elif (metodo_busqueda == 'astar'): # Estrella
-		resultado = astar(problema, graph_search=True)#, viewer=visor)
-	#print(visor.stats)
+		resultado = astar(problema, graph_search=True, viewer=visor)
+	print(visor.stats)
 
 
 
@@ -178,19 +190,21 @@ def resolver(metodo_busqueda,posiciones_aparatos):
 
 if __name__ == '__main__':
 
-#	print 'Inicio', datetime.datetime.now()
+	print 'Inicio', datetime.datetime.now()
 
 	aparatos = ((1, 2), (2, 0), (3, 0))
-	resultado = resolver('greedy',aparatos)
+	resultado = resolver('astar',aparatos)
 
-#	print('Estado meta:')
-#	print(resultado)
-#	print(type(resultado))
-#	print('Camino:')
+	print('Estado meta:')
+	print(resultado)
+	print(type(resultado))
+	print('Camino:')
 #	for accion, estado in resultado.path():
 #		print 'Movi', accion
 #		print 'Llegue a', estado
-	#print 'costo', str(resultado.cost)
-	#print 'profundidad', str(resultado.depth)	
-	#print 'Fin', datetime.datetime.now()
+	print 'costo', str(resultado.cost)
+	print 'profundidad', str(resultado.depth)	
+	print 'Fin', datetime.datetime.now()
+
+
 
