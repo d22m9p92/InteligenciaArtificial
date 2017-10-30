@@ -9,7 +9,7 @@ objetos = ['Armaduras','Armas','Escudos','Amuletos','Posicion']
 
 #Lista de elementos sin los que son predefinidos anteriormente
 armaduras = ['Verde' , 'Amarillo' , 'Azul' , 'Blanco']
-armas = ['Martillo' , 'Hacha' , ' Lanza' , 'Espada' ]
+armas = ['Martillo' , 'Hacha' , 'Lanza' , 'Espada' ]
 escudos = ['Cruz' , 'Pajaros' ,  'Dragon' , 'Arbol']
 amuletos = ['Pulsera' , 'Cinturon' , 'Moneda' , 'Anillo']
 posiciones = list(a for a in range(6) if a > 1)
@@ -107,9 +107,9 @@ def lanza_pulsera(variables, valores):
 	#### El guerrero que usaba lanza, se ubicaba al lado del guerrero que usaba una brillante pulsera de oro para la suerte
 	arma , amuleto , posicion1 , posicion2  = variables
 	val_arma, val_amuleto ,val_posicion1 , val_posicion2 = valores
-	
 	if val_arma == 'Lanza' and val_amuleto == 'Pulsera': 
-		if posicion1 == posicion2 + 1 or posicion1 == posicion2 -1:
+		if val_posicion1 == val_posicion2 + 1 or val_posicion1 == val_posicion2 -1:
+
 			return True
 		else:
 			return False
@@ -136,16 +136,31 @@ def espada_dragon(variables, valores):
 			return False
 	return True
 
-def lanza_arbol(variables, valores):  
-# el guerrero de la lanza siempre estaba al lado del guerrero del escudo con dibujo de arbol
-	escudo , arma , posicion1 , posicion2  = variables
-	val_escudo,val_arma ,val_posicion1 , val_posicion2 = valores
-	if val_arma == 'Lanza' or val_escudo == 'Lanza':
+def agnar_azul(variables,valores):
+	vikingo1 , vikingo2 , posicion1 , posicion2  = variables
+	val_armadura1, val_armadura2 ,val_posicion1 , val_posicion2 = valores
+	if (vikingo1[0] == 'A' and val_armadura2 == 'Azul') or (vikingo2[0] == 'A' and val_armadura1 == 'Azul') :
 		if val_posicion1 == val_posicion2 + 1 or val_posicion1 == val_posicion2 -1:
 			return True
 		else:
 			return False
 	return True	
+
+
+def lanza_arbol(variables, valores):  
+# el guerrero de la lanza siempre estaba al lado del guerrero del escudo con dibujo de arbol
+	escudo , arma , posicion1 , posicion2  = variables
+	val_escudo,val_arma ,val_posicion1 , val_posicion2 = valores
+	if val_arma == 'Lanza' and val_escudo == 'Arbol':
+		if val_posicion1 == val_posicion2 + 1 or val_posicion1 == val_posicion2 -1:
+			
+			return True
+		else:
+			return False
+	return True	
+
+
+
 
 def diferentes(variables,valores):
 	valor1, valor2 = valores
@@ -180,6 +195,7 @@ for vikingo in vikingos:
 	restricciones.append((((vikingo,'Posicion') , (vikingo,'Escudos')) , tercero_pajaros))
 
 #guerrero con lanza a lado del de pulsera
+lista_res = []
 for vikingo in vikingos:
 	for vikingo2 in vikingos:
 		if vikingo != vikingo2:
@@ -190,6 +206,7 @@ for restriccion in lista_res:
 
 
 #cinturon hacha
+lista_res = []
 for vikingo in vikingos:
 	for vikingo2 in vikingos:
 		if vikingo != vikingo2:
@@ -202,7 +219,19 @@ for restriccion in lista_res:
 for vikingo in vikingos:
 	restricciones.append((((vikingo,'Escudos') , (vikingo,'Armas')) , espada_dragon))
 
+#Agnar armadura azul
+lista_res = []
+for vikingo in vikingos:
+	for vikingo2 in vikingos:
+		if vikingo != vikingo2:
+			lista_res.append(((vikingo,'Armaduras'),(vikingo2,'Armaduras'),(vikingo,'Posicion'),(vikingo2,'Posicion')))
+
+for restriccion in lista_res:
+	restricciones.append((restriccion,agnar_azul))
+
+
 #lanza arbol
+lista_res = []
 for vikingo in vikingos:
 	for vikingo2 in vikingos:
 		if vikingo != vikingo2:
@@ -261,13 +290,24 @@ def resolver(metodo_busqueda, iteraciones):
 
 	if metodo_busqueda == 'backtrack':
 		result = backtrack(problem, variable_heuristic = MOST_CONSTRAINED_VARIABLE, value_heuristic=LEAST_CONSTRAINING_VALUE, inference=True)
-		return resultado
+		return result
 	if metodo_busqueda == 'min_conflicts':
-		result = min_conflicts(problem, iterations_limit=500)
-		return resultado
+		result = min_conflicts(problem, iterations_limit=iteraciones)
+		return result
 
 
 
+# problem = CspProblem(variables, dominios, restricciones)
+
+# print('backtrack:')
+# result = backtrack(problem,
+#                    variable_heuristic=MOST_CONSTRAINED_VARIABLE,
+#                    value_heuristic=LEAST_CONSTRAINING_VALUE,
+#                    inference=True)
+
+# print(result)
+
+# resolver('min_conflicts',500)
 
 
 #print 'DOMINIOS', dominios
